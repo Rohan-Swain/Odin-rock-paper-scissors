@@ -2,33 +2,14 @@ let options = ["rock", "paper", "scissors"];
 
 let computerScore = 0;
 let humanScore = 0;
+let currentRound = 1;
+let winningScore = 5;
+let endMatch = false;
+
+let gameScreen = document.getElementById("gameScreen");
 
 function getComputerChoice() {
     return options[Math.floor(Math.random() * options.length)];
-}
-
-function getHumanChoice() {
-    let humanChoice = prompt("Enter your choice: ");
-
-    let validOption;
-
-    let i;
-
-    for(i = 0; i < options.length; i++) {
-        if (humanChoice.toLowerCase() === options[i]) {
-            validOption = true;
-            break;
-        } else {
-            continue;
-        }
-    }
-
-    if(validOption) {
-        return options[i];
-    } else {
-        alert("Never Played Rock Paper Scissors before or what??")
-        return getHumanChoice();
-    }
 }
 
 function playRound(getHumanChoice, getComputerChoice) {
@@ -36,72 +17,72 @@ function playRound(getHumanChoice, getComputerChoice) {
     let humanChoice = getHumanChoice;
     let computerChoice = getComputerChoice;
 
-    console.log(`You Choose ${humanChoice}, Computer Choose ${computerChoice}`);
+    gameScreen.innerHTML += `<span>You Choose ${humanChoice}, Computer Choose ${computerChoice}</span><br />`;
 
     switch (humanChoice) {
         case "rock":
             switch(computerChoice) {
                 case "rock":
-                    console.log(`Its a TIE! You both Choose ${humanChoice}`);
+                    gameScreen.innerHTML += `<span>Its a TIE! You both Choose ${humanChoice}</span><br />`;
                     break;
                 case "paper":
                     computerScore++;
-                    console.log(`Computer takes it! ${computerChoice} wraps ${humanChoice}`);
+                    gameScreen.innerHTML += `<span>Computer takes it! ${computerChoice} wraps ${humanChoice}</span><br />`;
                     break;
                 case "scissors":
                     humanScore++;
-                    console.log(`You Win! ${humanChoice} breaks ${computerChoice}`);
+                    gameScreen.innerHTML += `<span>You Win! ${humanChoice} breaks ${computerChoice}</span><br />`;
                     break;
             }
             break;
         case "paper":
             switch(computerChoice) {
                 case "paper":
-                    console.log(`Its a TIE! You both Choose ${humanChoice}`);
+                    gameScreen.innerHTML += `<span>Its a TIE! You both Choose ${humanChoice}<span><br />`;
                     break;
                 case "scissors":
                     computerScore++;
-                    console.log(`Computer takes it! ${computerChoice} cuts ${humanChoice}`);
+                    gameScreen.innerHTML += `<span>Computer takes it! ${computerChoice} cuts ${humanChoice}</span><br />`;
                     break;
                 case "rock":
                     humanScore++;
-                    console.log(`You Win! ${humanChoice} wraps ${computerChoice}`);
+                    gameScreen.innerHTML += `<span>You Win! ${humanChoice} wraps ${computerChoice}</span><br />`;
                     break;
             }
             break;
         case "scissors":
             switch(computerChoice) {
                 case "scissors":
-                    console.log(`Its a TIE! You both Choose ${humanChoice}`);
+                    gameScreen.innerHTML += `<span>Its a TIE! You both Choose ${humanChoice}</span><br />`;
                     break;
                 case "rock":
                     computerScore++;
-                    console.log(`Computer takes it! ${computerChoice} breaks ${humanChoice}`);
+                    gameScreen.innerHTML += `<span>Computer takes it! ${computerChoice} breaks ${humanChoice}</span><br />`;
                     break;
                 case "paper":
                     humanScore++;
-                    console.log(`You Win! ${humanChoice} cuts ${computerChoice}`);
+                    gameScreen.innerHTML += `<span>You Win! ${humanChoice} cuts ${computerChoice}</span><br />`;
                     break;
             }
             break;
     }
 }
 
-function playGame() {
-    for(let i = 0; i < 5; i++) {
-        console.log(`Round ${i+1}`);
-        playRound(getHumanChoice(), getComputerChoice());
-        console.log(`Computer Score: ${computerScore}`);
-        console.log(`Your Score: ${humanScore}`);
+function playGame(humanChoice) {
+    if(endMatch) return;
+
+    gameScreen.innerHTML += `<span>Round ${currentRound}</span><br />`;
+    playRound(humanChoice, getComputerChoice());
+    gameScreen.innerHTML +=`<span>Computer Score: ${computerScore}</span><br />`;
+    gameScreen.innerHTML +=`<span>Your Score: ${humanScore}</span><br />`;
+    
+    if(computerScore === winningScore) {
+        endMatch = true;
+        gameScreen.innerHTML += "<span>You Lose! Try again by hitting the reload button</span><br />";
+    } else if(humanScore === winningScore) {
+        endMatch = true;
+        gameScreen.innerHTML += "<span>You Win! Wanna Win again? Hit the reload button</span><br />";
     }
 
-    if(computerScore > humanScore) {
-        return "You Lose! Try again by hitting the reload button";
-    } else if(computerScore === humanScore) {
-        return "Well its a Tie! Break the Tie by hitting the reload button";
-    } else {
-        return "You Win! Wanna Win again? Hit the reload button";
-    }
+    currentRound++;
 }
-
-console.log(playGame());
